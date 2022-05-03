@@ -94,7 +94,7 @@ def click(event):
 
 starting_ax_xlim = ax.get_xlim()
 
-def scroll(event, base_scale = 2):
+def scroll(event, base_scale = 1.5):
     cur_xlim = ax.get_xlim()
     cur_xrange = (cur_xlim[1] - cur_xlim[0])*.5
     xdata = event.xdata
