@@ -2,6 +2,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 import soundfile as sf
 from scipy.io.wavfile import write
+import math
 
 # Zainicjowanie niektórych zmiennych
 data_mono = []
@@ -11,10 +12,12 @@ starts = []
 ends = []
 bufor = []
 samples_array = []
+given_rms_in_db = -15
+filtered = []
 # counter = 0
 
 # Wczytanie sygnału
-data, sps = sf.read("audio.wav")
+data, sps = sf.read("stereo_v2.wav")
 
 # Utworzenie monofonicznego sygnału żeby na wykresie dla każdego x była tylko jedna wartość y
 for i in range(0,len(data)):
@@ -24,6 +27,43 @@ for i in range(0,len(data)):
 # Utworzenie okna i wykresu
 fig, ax = plt.subplots()
 ax.plot(data_mono)
+
+
+
+# This function takes sample-slice and returns it with trimed silence
+def filtering_zeros(slice):
+    filtering = []
+    for i in range(0,len(slice)):
+        if bufor[i][0] == 0 and bufor[i][1] == 0:
+            filtering.append(False)
+        else:
+            filtering.append(True)
+    filtered = slice[filtering]
+    return filtered
+
+def normalize_to_rms(given_rms_in_db, slice):
+
+    input_measured_rms = np.sqrt(np.sum(slice**2)/len(slice))
+    input_measured_rms_in_db = 20 * math.log(input_measured_rms,10)
+
+    given_rms_no_unit = 10 ** (given_rms_in_db/20)
+
+    x = np.sqrt(((given_rms_no_unit**2) * len(slice))/np.sum(slice**2))
+
+    scaled_slice = slice * x
+
+    # output_measured_rms = np.sqrt(np.sum(scaled_slice**2)/len(scaled_slice))
+    # output_measured_rms_in_db = 20 * math.log(output_measured_rms,10)
+
+    return scaled_slice
+
+    # scaled_slice_int = np.int16(scaled_data * 32767)
+    # write("scaled.wav",sps,scaled_data_int)
+
+    # print("RMS value of input signal:",input_measured_rms_in_db)
+    # print("RMS value of output signal:",output_measured_rms_in_db)
+
+
 
 def NavigCoordin(x,y):
     if x>=0 and x<=len(data_mono):
@@ -96,7 +136,9 @@ for i in range(0,len(markers)):
 
 for i in range(0,len(starts)):
     bufor = data[starts[i]:ends[i]]
-    bufor = np.int16(bufor * 32767)
-    write("output"+str(i)+".wav", sps, bufor)
+    filtered = filtering_zeros(bufor)
+    normalized = normalize_to_rms(given_rms_in_db,filtered)
+    normalized_int = np.int16(normalized * 32767)
+    write("output"+str(i)+".wav", sps, normalized_int)
 
 # https://stackoverflow.com/questions/11551049/matplotlib-plot-zooming-with-scroll-wheel
