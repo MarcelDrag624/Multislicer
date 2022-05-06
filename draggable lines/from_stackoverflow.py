@@ -21,10 +21,14 @@ class draggable_lines:
         self.sid = self.c.mpl_connect('pick_event', self.clickonline)
 
     def clickonline(self, event):
-        if event.artist == self.line:
+        if event.artist == self.line and event.mouseevent.button == plt.MouseButton.LEFT and event.mouseevent.dblclick != True:
             # print("line selected ", event.artist)
             self.follower = self.c.mpl_connect("motion_notify_event", self.followmouse)
             self.releaser = self.c.mpl_connect("button_press_event", self.releaseonclick)
+        elif event.artist == self.line and event.mouseevent.button == plt.MouseButton.RIGHT:
+            event.artist.remove()
+            self.c.draw_idle()
+
 
     def followmouse(self, event):
         # if self.o == "h":
@@ -46,7 +50,7 @@ class draggable_lines:
 
 fig = plt.figure()
 ax = fig.add_subplot()
-Vline = draggable_lines(ax, 0.5)
+# Vline = draggable_lines(ax, 0.5)
 Tline = draggable_lines(ax, 0.5)
 Tline2 = draggable_lines(ax, 0.1)
 
