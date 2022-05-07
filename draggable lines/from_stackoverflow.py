@@ -2,12 +2,12 @@ import matplotlib.pyplot as plt
 import matplotlib.lines as lines
 
 class draggable_lines:
-    def __init__(self, ax, XorY):
-        self.ax = ax
+    def __init__(self, XorY):
+        # self.ax = ax
         self.c = ax.get_figure().canvas
         # self.o = kind
         self.XorY = XorY
-#
+
         # if kind == "h":
         #     x = [-1, 1]
         #     y = [XorY, XorY]
@@ -51,7 +51,7 @@ class draggable_lines:
 fig = plt.figure()
 ax = fig.add_subplot()
 # Vline = draggable_lines(ax, 0.5)
-Tline = draggable_lines(ax, 0.5)
-Tline2 = draggable_lines(ax, 0.1)
+Tline = draggable_lines(0.5)
+Tline2 = draggable_lines(0.1)
 
-plt.show()
+d= plt.show()
