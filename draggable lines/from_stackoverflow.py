@@ -1,10 +1,14 @@
 import matplotlib.pyplot as plt
 import matplotlib.lines as lines
 
+fig, ay = plt.subplots()
+ay.plot()
+path = ay.get_figure().canvas
+
 class draggable_lines:
-    def __init__(self, XorY):
+    def __init__(self, XorY,path):
         # self.ax = ax
-        self.c = ax.get_figure().canvas
+        self.c = path
         # self.o = kind
         self.XorY = XorY
 
@@ -15,7 +19,7 @@ class draggable_lines:
         # elif kind == "v":
         #     x = [XorY, XorY]
         #     y = [-1, 1]
-        self.line = ax.axvline(XorY, picker = True, pickradius = 5)
+        self.line = ay.axvline(XorY, picker = True, pickradius = 5)
         # self.ax.add_line(self.line)
         # self.c.draw_idle()
         self.sid = self.c.mpl_connect('pick_event', self.clickonline)
@@ -48,10 +52,10 @@ class draggable_lines:
         self.c.mpl_disconnect(self.releaser)
         self.c.mpl_disconnect(self.follower)
 
-fig = plt.figure()
-ax = fig.add_subplot()
+# fig = plt.figure()
+# ax = fig.add_subplot()
 # Vline = draggable_lines(ax, 0.5)
-Tline = draggable_lines(0.5)
-Tline2 = draggable_lines(0.1)
+Tline = draggable_lines(0.5,path)
+Tline2 = draggable_lines(0.1,path)
 
-d= plt.show()
+plt.show()
