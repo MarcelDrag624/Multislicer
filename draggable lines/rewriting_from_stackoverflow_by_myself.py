@@ -16,11 +16,12 @@ def dbl_lmb_to_create_rmb_to_delete_line(event):
 
     if event.button == plt.MouseButton.LEFT and event.dblclick == True:
         line = ax.axvline(event.xdata, picker = True, pickradius = 5)
-    elif event.button == plt.MouseButton.RIGHT:
-        clicked_object_path.remove()
+    elif event.button == plt.MouseButton.LEFT and event.dblclick == False:
+        make_the_line_follow_mouse_connector = fig.canvas.mpl_connect('motion_notify_event', make_the_line_follow_mouse)
+    # elif event.button == plt.MouseButton.RIGHT:
+    #     clicked_object_path.remove()
 
     last_click_x_cord = event.xdata
-    make_the_line_follow_mouse_connector = fig.canvas.mpl_connect('motion_notify_event', make_the_line_follow_mouse)
 
 
 def get_path_to_clicked_object(event):
@@ -29,7 +30,9 @@ def get_path_to_clicked_object(event):
 
     clicked_object_path = event.artist
     switch = True
-    return clicked_object_path
+    if event.mouseevent.button == plt.MouseButton.RIGHT:
+        event.artist.remove()
+    # return clicked_object_path
 
 
 def make_the_line_follow_mouse(event):
