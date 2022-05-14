@@ -160,6 +160,7 @@ def scroll(event, base_scale = 1.5):
 lmb_to_create_line_connector = fig.canvas.mpl_connect('button_press_event', dbl_lmb_to_create_line)
 click_on_line_connector = fig.canvas.mpl_connect('pick_event', get_path_to_clicked_object_or_delete_it)
 stop_following_mouse_after_button_release_connector = fig.canvas.mpl_connect('button_release_event',stop_following_mouse_after_button_release)
+sid = fig.canvas.mpl_connect('scroll_event', scroll)
 
 # !
 # Zrobić tak żeby scroll down działał do pewnego momentu, powyżej którego przywracany jest początkowy xlim
