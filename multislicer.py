@@ -7,7 +7,7 @@ import math
 # Zainicjowanie niektórych zmiennych
 data_mono = []
 x_click = 0
-markers = []
+# markers = []
 starts = []
 ends = []
 bufor = []
@@ -15,7 +15,7 @@ samples_array = []
 given_rms_in_db = -15
 filtered = []
 last_click_x_cord = 0
-switch = False
+switch_for_dragging = False
 # counter = 0
 
 # Wczytanie sygnału
@@ -83,10 +83,10 @@ def dbl_lmb_to_create_line(event):
 
 def get_path_to_clicked_object_or_delete_it(event):
     global clicked_object_path
-    global switch
+    global switch_for_dragging
 
     clicked_object_path = event.artist
-    switch = True
+    switch_for_dragging = True
     if event.mouseevent.button == plt.MouseButton.RIGHT:
         event.artist.remove()
     # return clicked_object_path
@@ -94,7 +94,7 @@ def get_path_to_clicked_object_or_delete_it(event):
 
 def make_the_line_follow_mouse(event):
     global clicked_object_path
-    if switch == True:
+    if switch_for_dragging == True:
         clicked_object_path.set_xdata([event.xdata,event.xdata])
 
 
@@ -102,9 +102,9 @@ def stop_following_mouse_after_button_release(event):
     fig.canvas.mpl_disconnect(make_the_line_follow_mouse_connector)
 
 
-def getting_list_of_vlines_x_cords():
+def get_a_list_of_vlines_x_cords():
     global sorted_vlines_x_cord
-    global markers
+    markers = []
     list_of_lines = ax.get_lines()
     for i in range(0,len(list_of_lines)):
         markers.append(int(list_of_lines[i].get_xdata()[0]))
@@ -157,8 +157,8 @@ def scroll(event, base_scale = 1.5):
 
 
 
-lmb_to_create_line_connector = fig.canvas.mpl_connect('button_press_event', dbl_lmb_to_create_line)
-click_on_line_connector = fig.canvas.mpl_connect('pick_event', get_path_to_clicked_object_or_delete_it)
+dbl_lmb_to_create_line_connector = fig.canvas.mpl_connect('button_press_event', dbl_lmb_to_create_line)
+get_path_to_clicked_object_or_delete_it_connector = fig.canvas.mpl_connect('pick_event', get_path_to_clicked_object_or_delete_it)
 stop_following_mouse_after_button_release_connector = fig.canvas.mpl_connect('button_release_event',stop_following_mouse_after_button_release)
 sid = fig.canvas.mpl_connect('scroll_event', scroll)
 
@@ -178,7 +178,7 @@ while True:
 # Trzeba też dodać zaokrąglanie wartości dodawanych do starts i ends tak żeby były tam tylko wartości całkowite
 # del markers[-1]
 
-print(getting_list_of_vlines_x_cords())
+markers = get_a_list_of_vlines_x_cords()
 
 for i in range(0,len(markers)):
     if i%2 == 0:
